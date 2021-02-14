@@ -31,6 +31,7 @@ import (
 )
 
 const (
+	schemeHTTP      = "http"
 	schemeHTTPS     = "https"
 	applicationJSON = "application/json"
 )
@@ -901,6 +902,11 @@ func (p *OAuthProxy) getOAuthRedirectURI(req *http.Request) string {
 	rd := *p.redirectURL
 	rd.Host = requestutil.GetRequestHost(req)
 	rd.Scheme = requestutil.GetRequestProto(req)
+
+	// If there's no scheme in the request, we should still include one
+	if rd.Scheme == "" {
+		rd.Scheme = schemeHTTP
+	}
 
 	// If CookieSecure is true, return `https` no matter what
 	// Not all reverse proxies set X-Forwarded-Proto
