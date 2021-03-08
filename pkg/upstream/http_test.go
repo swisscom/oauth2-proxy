@@ -16,6 +16,7 @@ import (
 	middlewareapi "github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/middleware"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/options"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/middleware"
+	requestutil "github.com/oauth2-proxy/oauth2-proxy/v7/pkg/requests/util"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
@@ -53,7 +54,9 @@ var _ = Describe("HTTP Upstream Suite", func() {
 				req.Header.Add(key, value)
 			}
 
-			req = middlewareapi.AddRequestScope(req, &middlewareapi.RequestScope{})
+			req = middlewareapi.AddRequestScope(req, &middlewareapi.RequestScope{
+				RequestID: requestID,
+			})
 			rw := httptest.NewRecorder()
 
 			flush := options.Duration(1 * time.Second)
@@ -107,9 +110,11 @@ var _ = Describe("HTTP Upstream Suite", func() {
 					contentType: {applicationJSON},
 				},
 				request: testHTTPRequest{
-					Method:     "GET",
-					URL:        "http://example.localhost/foo",
-					Header:     map[string][]string{},
+					Method: "GET",
+					URL:    "http://example.localhost/foo",
+					Header: map[string][]string{
+						requestutil.XRequestID: {requestID},
+					},
 					Body:       []byte{},
 					Host:       "example.localhost",
 					RequestURI: "http://example.localhost/foo",
@@ -130,9 +135,11 @@ var _ = Describe("HTTP Upstream Suite", func() {
 					contentType: {applicationJSON},
 				},
 				request: testHTTPRequest{
-					Method:     "GET",
-					URL:        "http://example.localhost/foo%2fbar/?baz=1",
-					Header:     map[string][]string{},
+					Method: "GET",
+					URL:    "http://example.localhost/foo%2fbar/?baz=1",
+					Header: map[string][]string{
+						requestutil.XRequestID: {requestID},
+					},
 					Body:       []byte{},
 					Host:       "example.localhost",
 					RequestURI: "http://example.localhost/foo%2fbar/?baz=1",
@@ -156,7 +163,8 @@ var _ = Describe("HTTP Upstream Suite", func() {
 					Method: "POST",
 					URL:    "http://example.localhost/withBody",
 					Header: map[string][]string{
-						contentLength: {"4"},
+						contentLength:          {"4"},
+						requestutil.XRequestID: {requestID},
 					},
 					Body:       []byte("body"),
 					Host:       "example.localhost",
@@ -217,8 +225,9 @@ var _ = Describe("HTTP Upstream Suite", func() {
 					Method: "GET",
 					URL:    "http://example.localhost/withSignature",
 					Header: map[string][]string{
-						gapAuth:      {""},
-						gapSignature: {"sha256 osMWI8Rr0Zr5HgNq6wakrgJITVJQMmFN1fXCesrqrmM="},
+						gapAuth:                {""},
+						gapSignature:           {"sha256 osMWI8Rr0Zr5HgNq6wakrgJITVJQMmFN1fXCesrqrmM="},
+						requestutil.XRequestID: {requestID},
 					},
 					Body:       []byte{},
 					Host:       "example.localhost",
@@ -247,8 +256,9 @@ var _ = Describe("HTTP Upstream Suite", func() {
 					Method: "GET",
 					URL:    "http://example.localhost/existingHeaders",
 					Header: map[string][]string{
-						"Header1": {"value1"},
-						"Header2": {"value2"},
+						"Header1":              {"value1"},
+						"Header2":              {"value2"},
+						requestutil.XRequestID: {requestID},
 					},
 					Body:       []byte{},
 					Host:       "example.localhost",

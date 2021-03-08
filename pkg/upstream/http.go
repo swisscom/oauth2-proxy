@@ -10,6 +10,7 @@ import (
 	"github.com/mbland/hmacauth"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/middleware"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/options"
+	requestutil "github.com/oauth2-proxy/oauth2-proxy/v7/pkg/requests/util"
 	"github.com/yhat/wsutil"
 )
 
@@ -81,6 +82,10 @@ func (h *httpUpstreamProxy) ServeHTTP(rw http.ResponseWriter, req *http.Request)
 	// If scope is nil, this will panic.
 	// A scope should always be injected before this handler is called.
 	scope.Upstream = h.upstream
+
+	// Force `X-Request-Id` header to be set. If it wasn't already present,
+	// this adds our random UUID.
+	req.Header.Set(requestutil.XRequestID, scope.RequestID)
 
 	// TODO (@NickMeves) - Deprecate GAP-Signature & remove GAP-Auth
 	if h.auth != nil {

@@ -9,6 +9,7 @@ import (
 
 	middlewareapi "github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/middleware"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/options"
+	requestutil "github.com/oauth2-proxy/oauth2-proxy/v7/pkg/requests/util"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
@@ -72,7 +73,9 @@ var _ = Describe("Proxy Suite", func() {
 		func(in *proxyTableInput) {
 			req := middlewareapi.AddRequestScope(
 				httptest.NewRequest("", in.target, nil),
-				&middlewareapi.RequestScope{},
+				&middlewareapi.RequestScope{
+					RequestID: requestID,
+				},
 			)
 			rw := httptest.NewRecorder()
 			// Don't mock the remote Address
@@ -113,8 +116,9 @@ var _ = Describe("Proxy Suite", func() {
 					Method: "GET",
 					URL:    "http://example.localhost/http/1234",
 					Header: map[string][]string{
-						"Gap-Auth":      {""},
-						"Gap-Signature": {"sha256 ofB1u6+FhEUbFLc3/uGbJVkl7GaN4egFqVvyO3+2I1w="},
+						"Gap-Auth":             {""},
+						"Gap-Signature":        {"sha256 ofB1u6+FhEUbFLc3/uGbJVkl7GaN4egFqVvyO3+2I1w="},
+						requestutil.XRequestID: {requestID},
 					},
 					Body:       []byte{},
 					Host:       "example.localhost",

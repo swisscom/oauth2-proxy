@@ -146,8 +146,8 @@ var _ = Describe("Util Suite", func() {
 				Expect(util.GetRequestID(req)).To(Equal(scopeUUID))
 			})
 
-			It("ignores X-Request-ID and returns the scope ID", func() {
-				req.Header.Add("X-Request-ID", headerUUID)
+			It("ignores X-Request-Id and returns the scope ID", func() {
+				req.Header.Add("X-Request-Id", headerUUID)
 				Expect(util.GetRequestID(req)).To(Equal(scopeUUID))
 			})
 		})
@@ -161,8 +161,8 @@ var _ = Describe("Util Suite", func() {
 				uuid.SetRand(nil)
 			})
 
-			It("returns the ID in the X-Request-ID header when set", func() {
-				req.Header.Add("X-Request-ID", headerUUID)
+			It("returns the ID in the X-Request-Id header when set", func() {
+				req.Header.Add("X-Request-Id", headerUUID)
 				Expect(util.GetRequestID(req)).To(Equal(headerUUID))
 			})
 

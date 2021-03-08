@@ -1,9 +1,9 @@
 package util
 
 import (
-	"github.com/google/uuid"
 	"net/http"
 
+	"github.com/google/uuid"
 	middlewareapi "github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/middleware"
 )
 
@@ -11,7 +11,7 @@ const (
 	XForwardedProto = "X-Forwarded-Proto"
 	XForwardedHost  = "X-Forwarded-Host"
 	XForwardedURI   = "X-Forwarded-Uri"
-	XRequestID      = "X-Request-ID"
+	XRequestID      = "X-Request-Id"
 )
 
 // GetRequestProto returns the request scheme or X-Forwarded-Proto if present
@@ -46,7 +46,7 @@ func GetRequestURI(req *http.Request) string {
 }
 
 // GetRequestID gets an existing RequestID set on the request Scope.
-// If the scope isn't set yet, it pulls it from the `X-Request-ID` header
+// If the scope isn't set yet, it pulls it from the `X-Request-Id` header
 // or makes a new random UUID if no header is set.
 func GetRequestID(req *http.Request) string {
 	scope := middlewareapi.GetRequestScope(req)

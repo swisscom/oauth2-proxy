@@ -21,7 +21,7 @@ type RequestScope struct {
 	// mode and if request `X-Forwarded-*` headers should be trusted
 	ReverseProxy bool
 
-	// RequestID is set to the request's `X-Request-ID` header if set.
+	// RequestID is set to the request's `X-Request-Id` header if set.
 	// Otherwise a random UUID is set.
 	RequestID string
 

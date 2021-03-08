@@ -61,6 +61,7 @@ const (
 	textPlainUTF8   = "text/plain; charset=utf-8"
 	gapAuth         = "Gap-Auth"
 	gapSignature    = "Gap-Signature"
+	requestID       = "11111111-2222-4333-8444-555555555555"
 )
 
 // testHTTPResponse is a struct used for checking responses in table tests
